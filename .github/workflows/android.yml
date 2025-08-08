@@ -21,8 +21,8 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # 手动安装 cmdline-tools + 需要的包（最稳妥）
-      - name: Install Android SDK manually
+      # 手动安装 Android SDK（最稳）
+      - name: Install Android SDK
         run: |
           mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
           curl -sL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o cmdline-tools.zip
@@ -32,7 +32,7 @@ jobs:
           yes | sdkmanager --licenses
           yes | sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      # 官方 Gradle Action（不需要仓库里有 gradlew）
+      # 官方 Gradle Action（不要求仓库里有 gradlew）
       - name: Build with Gradle 8.7
         uses: gradle/gradle-build-action@v3
         with:
@@ -44,8 +44,3 @@ jobs:
         with:
           name: app-debug.apk
           path: app/build/outputs/apk/debug/*.apk
-
-
-
-
-
