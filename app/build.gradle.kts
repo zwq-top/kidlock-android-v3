@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    // 关键：Kotlin 2.x + Compose 必须加的插件（版本号要与项目 Kotlin 一致；先用 2.0.0）
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
 }
 
@@ -43,6 +44,9 @@ android {
     buildFeatures {
         compose = true
     }
+
+    // 注意：不要再保留 composeOptions { kotlinCompilerExtensionVersion = "..." }
+    // Kotlin 2.x 使用上面的 compose 插件来管理编译器版本
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
