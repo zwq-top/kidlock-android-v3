@@ -9,8 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # 统一只用 ANDROID_HOME，避免 SDK 路径冲突
-      ANDROID_HOME: ${{ github.workspace }}/android-sdk
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
     steps:
       - name: Checkout
@@ -22,25 +22,24 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # 安装 Android SDK
-      - name: Install Android SDK
+      - name: Accept licenses & ensure components
         run: |
-          mkdir -p "$ANDROID_HOME/cmdline-tools"
-          curl -sL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o cmdline-tools.zip
-          unzip -q cmdline-tools.zip -d "$ANDROID_HOME/cmdline-tools"
-          mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+          set -eux
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
           yes | sdkmanager --licenses
-          yes | sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      # 编译 APK
+      - name: Force local.properties sdk.dir
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          cat local.properties
+
       - name: Build with Gradle 8.7
         uses: gradle/gradle-build-action@v3
         with:
           gradle-version: 8.7
-          arguments: :app:assembleDebug --no-daemon --stacktrace
+          arguments: :app:assembleDebug --no-daemon --stacktrace --info
 
-      # 上传生成的 APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
