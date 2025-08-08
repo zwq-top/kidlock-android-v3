@@ -1,0 +1,14 @@
+
+<accessibility-service
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagReportViewIds|flagRetrieveInteractiveWindows"
+    android:notificationTimeout="0"
+    android:canPerformGestures="false"
+    android:description="@string/app_name"
+    android:packageNames=""
+    android:nonInteractiveUiTimeout="0"
+    android:interactiveUiTimeout="0"
+    android:initialTouchMode="true"
+    android:accessibilityServiceInfoFlags="flagIncludeNotImportantViews"/>
